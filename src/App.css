@@ -1,3 +1,26 @@
 .App {
   text-align: center;
 }
+
+#map-container {
+  height: 1000px;
+}
+
+#locations-list {
+  width: 25%;
+  height: 100%;
+  float: left;
+}
+
+#locations-list ul {
+  list-style: none;
+}
+
+#locations-list .selected {
+  background-color: gray;
+}
+
+#map {
+  height: 100%;
+  width: 75%;
+}

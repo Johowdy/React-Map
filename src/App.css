@@ -16,6 +16,10 @@
   list-style: none;
 }
 
+#locations-list ul li {
+  cursor: pointer;
+}
+
 #locations-list .selected {
   background-color: gray;
 }

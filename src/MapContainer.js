@@ -32,8 +32,8 @@ class MapContainer extends Component {
 
   componentDidMount() {
     this.initGoogleMaps().then((google) => {
-      console.log('google', google);
       this.map = new google.maps.Map(document.getElementById('map'), {zoom: 11});
+      this.infoWindow = new google.maps.InfoWindow();
       this.geocoder = new google.maps.Geocoder();
       this.geocoder.geocode({address: 'El Paso, TX'}, (results, status) => {
         if (status === 'OK') {
@@ -48,13 +48,38 @@ class MapContainer extends Component {
 
   populateVets() {
     this.placesService = new window.google.maps.places.PlacesService(this.map);
+
     this.placesService.textSearch({query: 'vet in El Paso, TX'}, (results, status) => {
       this.setState({locations:results});
+      this.markers = results.map(vet => {
+        const marker = new window.google.maps.Marker({
+          position: vet.geometry.location,
+          map: this.map,
+          title: vet.name,
+          vetId: vet.id
+        });
+        marker.addListener('click', () => {
+          this.selectLocation(vet);
+        });
+        return marker;
+      })
     })
   }
 
   selectLocation(location) {
-    this.setState({selectedLocation: location})
+    const { selectedLocation } = this.state;
+    if (selectedLocation && selectedLocation.id === location.id) {
+      this.setState({selectedLocation: null})
+      this.infoWindow.close();
+    } else {
+      this.setState({selectedLocation: location});
+      const marker = this.markers.find(marker => {
+        return marker.vetId === location.id;
+      });
+      console.log('marker', location);
+      this.infoWindow.setContent(`${location.name}\n<br/>\n${location.formatted_address}`);
+      this.infoWindow.open(this.map, marker);
+    }
   }
 
   render() {
@@ -64,7 +89,7 @@ class MapContainer extends Component {
         <div id="header">
           Vets in El Paso, Tx
         </div>
-        <LocationsList locations={locations} selectedLocation={selectedLocation} selectLocation={location => this.selectLocation(location)}/>
+        <LocationsList locations={locations} selectedLocation={selectedLocation} selectLocation={location => this.selectLocation(location)} />
         <div id="map">...Loading...</div>
       </div>
     )

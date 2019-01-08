@@ -76,8 +76,11 @@ class MapContainer extends Component {
       const marker = this.markers.find(marker => {
         return marker.vetId === location.id;
       });
-      console.log('marker', location);
-      this.infoWindow.setContent(`${location.name}\n<br/>\n${location.formatted_address}`);
+
+      const photoUrl = location.photos && location.photos[0] && location.photos[0] ? location.photos[0].getUrl() : null;
+      const photoTag = photoUrl ? `\n<br/>\n<img src="${photoUrl}"/>` : '';
+
+      this.infoWindow.setContent(`${location.name}\n<br/>\n${location.formatted_address}${photoTag}`);
       this.infoWindow.open(this.map, marker);
     }
   }

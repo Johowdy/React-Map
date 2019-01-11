@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import LocationsList from './LocationsList';
-import env from './Keys';
+import env from './env';
+import axios from 'axios';
 
 class MapContainer extends Component {
   state = {
@@ -18,7 +19,7 @@ class MapContainer extends Component {
         };
 
         const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${env.mapsApiKey}&callback=resolveGoogleMaps&libraries=places`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${env.mapsApiKey}&callback=resolveGoogleMaps`;
         script.async = true;
         document.body.appendChild(script);
       })
@@ -47,27 +48,26 @@ class MapContainer extends Component {
   }
 
   populateVets() {
-    this.placesService = new window.google.maps.places.PlacesService(this.map);
-
-    fetch('https://api.yelp.com/v3/businesses/search?term=vet&location="el paso, tx"', {
+    fetch('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=vet&location=el paso, tx', {
       headers: {
-        Bearer: `${env.yelpKey}`
+        'Authorization': `Bearer ${env.yelpKey}`
       }
     })
     .then(res => {
-      console.log(`yelp results: ${res}`);
       return res.json();
     })
-
-/*
-    this.placesService.textSearch({query: 'vet in El Paso, TX'}, (results, status) => {
-      this.setState({locations:results});
+    .then(jsonResults => {
+      const results = jsonResults.businesses;
+      this.setState({locations: results});
       this.markers = [];
       for(let i = 0; i < results.length; i++) {
         const vet = results[i];
         setTimeout(() => {
           const marker = new window.google.maps.Marker({
-            position: vet.geometry.location,
+            position: {
+              lat: vet.coordinates.latitude,
+              lng: vet.coordinates.longitude
+            },
             map: this.map,
             title: vet.name,
             vetId: vet.id,
@@ -80,7 +80,9 @@ class MapContainer extends Component {
         }, i * 200);
       }
     })
-    */
+    .catch(err => {
+      console.log(`error getting locations from yelp: ${err}`);
+    })
   }
 
   selectLocation(location) {
@@ -94,10 +96,10 @@ class MapContainer extends Component {
         return marker.vetId === location.id;
       });
 
-      const photoUrl = location.photos && location.photos[0] && location.photos[0] ? location.photos[0].getUrl() : null;
+      const photoUrl = location.image_url || null;
       const photoTag = photoUrl ? `\n<br/>\n<img src="${photoUrl}"/>` : '';
 
-      this.infoWindow.setContent(`${location.name}\n<br/>\n${location.formatted_address}${photoTag}`);
+      this.infoWindow.setContent(`${location.name}\n<br/>\n${location.display_phone}\n<br/>\n${location.location.display_address.join('<br/>')}\n<br/>\n${photoTag}`);
       this.infoWindow.open(this.map, marker);
       marker.setAnimation(window.google.maps.Animation.BOUNCE);
       setTimeout(((marker) => {

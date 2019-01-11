@@ -35,6 +35,9 @@ class MapContainer extends Component {
     this.initGoogleMaps().then((google) => {
       this.map = new google.maps.Map(document.getElementById('map'), {zoom: 11});
       this.infoWindow = new google.maps.InfoWindow();
+      this.infoWindow.addListener('closeclick', () => {
+        this.selectLocation(null);
+      });
       this.geocoder = new google.maps.Geocoder();
       this.geocoder.geocode({address: 'El Paso, TX'}, (results, status) => {
         if (status === 'OK') {
@@ -87,7 +90,10 @@ class MapContainer extends Component {
 
   selectLocation(location) {
     const { selectedLocation } = this.state;
-    if (selectedLocation && selectedLocation.id === location.id) {
+    if (!location) {
+      this.infoWindow.close();
+      this.setState({selectedLocation: null})
+    } else if (selectedLocation && selectedLocation.id === location.id) {
       this.setState({selectedLocation: null})
       this.infoWindow.close();
     } else {
@@ -99,7 +105,7 @@ class MapContainer extends Component {
       const photoUrl = location.image_url || null;
       const photoTag = photoUrl ? `\n<br/>\n<img src="${photoUrl}"/>` : '';
 
-      this.infoWindow.setContent(`${location.name}\n<br/>\n${location.display_phone}\n<br/>\n${location.location.display_address.join('<br/>')}\n<br/>\n${photoTag}`);
+      this.infoWindow.setContent(`${location.name}\n<br/>\n${location.display_phone}\n<br/>\n${location.location.display_address.join('<br/>')}\n${photoTag}`);
       this.infoWindow.open(this.map, marker);
       marker.setAnimation(window.google.maps.Animation.BOUNCE);
       setTimeout(((marker) => {

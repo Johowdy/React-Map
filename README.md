@@ -3,6 +3,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## References
 
 [Using Google Maps in a React Component](https://stackoverflow.com/questions/48493960/using-google-map-in-react-component)
+[Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/tutorial)
+[Yelp Business Search](https://www.yelp.com/developers/documentation/v3/business_search)
 
 ## Available Scripts
 

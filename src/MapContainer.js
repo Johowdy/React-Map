@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import LocationsList from './LocationsList';
+import env from './Keys';
 
 class MapContainer extends Component {
   state = {
@@ -17,8 +18,7 @@ class MapContainer extends Component {
         };
 
         const script = document.createElement("script");
-        const apiKey = 'AIzaSyBihJVaCxpU8TqNPiGRomIxS8pH6QEtLa0';
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=resolveGoogleMaps&libraries=places`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${env.mapsApiKey}&callback=resolveGoogleMaps&libraries=places`;
         script.async = true;
         document.body.appendChild(script);
       })
@@ -49,21 +49,38 @@ class MapContainer extends Component {
   populateVets() {
     this.placesService = new window.google.maps.places.PlacesService(this.map);
 
+    fetch('https://api.yelp.com/v3/businesses/search?term=vet&location="el paso, tx"', {
+      headers: {
+        Bearer: `${env.yelpKey}`
+      }
+    })
+    .then(res => {
+      console.log(`yelp results: ${res}`);
+      return res.json();
+    })
+
+/*
     this.placesService.textSearch({query: 'vet in El Paso, TX'}, (results, status) => {
       this.setState({locations:results});
-      this.markers = results.map(vet => {
-        const marker = new window.google.maps.Marker({
-          position: vet.geometry.location,
-          map: this.map,
-          title: vet.name,
-          vetId: vet.id
-        });
-        marker.addListener('click', () => {
-          this.selectLocation(vet);
-        });
-        return marker;
-      })
+      this.markers = [];
+      for(let i = 0; i < results.length; i++) {
+        const vet = results[i];
+        setTimeout(() => {
+          const marker = new window.google.maps.Marker({
+            position: vet.geometry.location,
+            map: this.map,
+            title: vet.name,
+            vetId: vet.id,
+            animation: window.google.maps.Animation.DROP
+          });
+          marker.addListener('click', () => {
+            this.selectLocation(vet);
+          });
+          this.markers.push(marker);
+        }, i * 200);
+      }
     })
+    */
   }
 
   selectLocation(location) {
@@ -82,6 +99,10 @@ class MapContainer extends Component {
 
       this.infoWindow.setContent(`${location.name}\n<br/>\n${location.formatted_address}${photoTag}`);
       this.infoWindow.open(this.map, marker);
+      marker.setAnimation(window.google.maps.Animation.BOUNCE);
+      setTimeout(((marker) => {
+        marker.setAnimation(null);
+      })(marker), 500);
     }
   }
 

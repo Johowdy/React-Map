@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import LocationsList from './LocationsList';
 import env from './env';
-import axios from 'axios';
 
 class MapContainer extends Component {
   state = {

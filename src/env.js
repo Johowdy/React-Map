@@ -1,6 +1,6 @@
-class Keys {
+const env = {
   mapsApiKey: '',
   yelpKey: '',
 }
 
-export default Keys;
+export default env;

@@ -5,7 +5,8 @@ import env from './env';
 class MapContainer extends Component {
   state = {
     selectedLocation: null,
-    locations: []
+    locations: [],
+    filter: ''
   }
 
   initGoogleMaps() {
@@ -24,7 +25,7 @@ class MapContainer extends Component {
       })
     }
     return this.mapsPromise;
-  };
+  }
 
   componentWillMount() {
     this.initGoogleMaps();
@@ -87,7 +88,7 @@ class MapContainer extends Component {
     })
   }
 
-  selectLocation(location) {
+  selectLocation = location => {
     const { selectedLocation } = this.state;
     if (!location) {
       this.infoWindow.close();
@@ -113,14 +114,40 @@ class MapContainer extends Component {
     }
   }
 
+  updateFilter = filter => {
+    this.setState({
+      filter: filter
+    }, this.updateMarkers)
+  }
+
+  updateMarkers() {
+    const { filter, selectedLocation } = this.state;
+    this.markers.forEach(marker => {
+      if (filter && filter.length && !marker.title.toLowerCase().includes(filter.toLowerCase())) {
+        if (selectedLocation && selectedLocation.id === marker.vetId) {
+          this.selectLocation(null);
+        }
+        marker.setMap(null);
+      } else if (marker.map === null) {
+        marker.setMap(this.map);
+      }
+    })
+  }
+
   render() {
-    const { locations, selectedLocation } = this.state;
+    const { locations, selectedLocation, filter } = this.state;
     return (
       <div id="map-container">
         <div id="header">
           Vets in El Paso, Tx
         </div>
-        <LocationsList locations={locations} selectedLocation={selectedLocation} selectLocation={location => this.selectLocation(location)} />
+        <LocationsList
+        filter={filter}
+        locations={locations.filter(location => !filter || !filter.length ||
+        location.name.toLowerCase().includes(filter.toLowerCase()))}
+        selectedLocation={selectedLocation}
+        selectLocation={this.selectLocation}
+        updateFilter={this.updateFilter} />
         <div id="map">...Loading...</div>
       </div>
     )

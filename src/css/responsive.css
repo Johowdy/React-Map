@@ -1,0 +1,17 @@
+@media screen and (max-width: 900px) {
+  #drawer-icon {
+    display: inherit;
+  }
+  #map-container.full {
+    width: 100%;
+  }
+  .filter-locations input {
+    border-color: lightgray;
+    width: 50%;
+    min-width: 75px;
+  }
+  .locations-results {
+    height: 100%;
+    overflow-y: scroll;
+  }
+}

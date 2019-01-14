@@ -1,0 +1,56 @@
+.App {
+  text-align: center;
+  height: 100%;
+}
+
+#header {
+  padding: 10px 0;
+}
+
+#drawer-icon {
+  display: none;
+  float: left;
+}
+
+#map-container {
+  width: 75%;
+  height: 95%;
+  right: 0;
+  position: absolute;
+}
+
+#locations-list {
+  width: 25%;
+  height: 100%;
+}
+
+#locations-list.hidden {
+  display: none;
+}
+
+#locations-list ul {
+  text-align: left;
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0 10px;
+}
+
+#locations-list ul li {
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+#locations-list .selected {
+  background-color: lightgray;
+}
+
+#map {
+  height: 100%;
+  /* width: 75%;
+  right: 0;
+  top: 50px; */
+}
+
+#map .gm-style img {
+  height: 100px;
+}

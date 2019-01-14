@@ -14,21 +14,23 @@ class LocationsList extends Component {
             onChange={event => updateFilter(event.target.value)}/>
         </div>
         <div className="locations-results">
-          <ul>
-            {locations && locations.map(location => {
-              return (
-                <li
-                  key={location.id}
-                  onClick={() => selectLocation(location)}
-                  className={selectedLocation && selectedLocation.id === location.id ? 'selected' : null}>
-                {location.name}
-                </li>
-              )
-            })}
-            {locationsLoading &&
-                <li>...loading...</li>
-            }
-          </ul>
+          {!locationsLoading &&
+            <ul>
+              {locations.map(location => {
+                return (
+                  <li
+                    key={location.id}
+                    onClick={() => selectLocation(location)}
+                    className={selectedLocation && selectedLocation.id === location.id ? 'selected' : null}>
+                  {location.name}
+                  </li>
+                )
+              })}
+            </ul>
+          }
+          {locationsLoading &&
+            <div id="loading-locations">Retrieving data from Yelp API...</div>
+          }
         </div>
       </section>
     )

@@ -44,6 +44,10 @@
   background-color: lightgray;
 }
 
+#locations-loading {
+  text-align: center;
+}
+
 #map {
   height: 100%;
   /* width: 75%;

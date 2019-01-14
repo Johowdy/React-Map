@@ -156,8 +156,8 @@ class App extends Component {
           <button id="drawer-icon" onClick={this.toggleLocations}>
           {locationsHidden ? '>' : '<'}
           </button>
-          </span>
-          <span>Vets in El Paso, TX</span>
+        </span>
+        <span>Vets in El Paso, TX<br/>as retrieved from Yelp API</span>
         </header>
         <main>
           <section id="map-container" className={locationsHidden ? 'full' : null}>

@@ -89,6 +89,7 @@ class App extends Component {
     })
     .catch(err => {
       console.log(`error getting locations from yelp: ${err}`);
+      alert('Error retrieving Vet locations from Yelp API');
     }).finally(() => {
       this.setState({locationsLoading: false})
     })

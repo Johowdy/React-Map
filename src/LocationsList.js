@@ -10,6 +10,7 @@ class LocationsList extends Component {
         <div className="filter-locations">
           <input
             type="text"
+            label="Vet Locations Filter"
             placeholder="Filter" value={filter}
             onChange={event => updateFilter(event.target.value)}/>
         </div>

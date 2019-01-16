@@ -21,9 +21,16 @@ class LocationsList extends Component {
                 return (
                   <li
                     key={location.id}
-                    onClick={() => selectLocation(location)}
                     className={selectedLocation && selectedLocation.id === location.id ? 'selected' : null}>
-                  {location.name}
+                    <a
+                      href="#"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        selectLocation(location);
+                      }}
+                      aria-label={`Select ${location.name}`}>
+                      {location.name}
+                    </a>
                   </li>
                 )
               })}

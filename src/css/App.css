@@ -36,8 +36,12 @@
 }
 
 #locations-list ul li {
-  cursor: pointer;
   padding: 5px 0;
+}
+
+#locations-list ul li a {
+  text-decoration: none;
+  color: inherit;
 }
 
 #locations-list .selected {

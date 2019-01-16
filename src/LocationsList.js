@@ -22,15 +22,11 @@ class LocationsList extends Component {
                   <li
                     key={location.id}
                     className={selectedLocation && selectedLocation.id === location.id ? 'selected' : null}>
-                    <a
-                      href="#"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        selectLocation(location);
-                      }}
+                    <button
+                      onClick={() => selectLocation(location)}
                       aria-label={`Select ${location.name}`}>
                       {location.name}
-                    </a>
+                    </button>
                   </li>
                 )
               })}
